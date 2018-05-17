@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 from flask import json
 
@@ -56,9 +57,18 @@ class Product(Base):
             self.name, self.cost, self.category_product_id, self.parameters
         )
 
+    def convert_to_dict(self):
+        return {
+            'name': self.name,
+            'cost': self.cost,
+            'parameters': self.parameters,
+        }
+
 
 engine = create_engine(
     'postgresql://flask:coiw2IS8ph@10.0.3.143:5432/flask_market',
     json_serializer=json.dumps,
     echo=True,
 )
+Session = sessionmaker(bind=engine)
+session = Session()

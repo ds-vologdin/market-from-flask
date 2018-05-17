@@ -1,11 +1,9 @@
-from sqlalchemy.orm import sessionmaker
-from models import MainCategoryProduct, CategoryProduct, Product, Base, engine
+from models import MainCategoryProduct, CategoryProduct, Product, Base, \
+    session, engine
 
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
 
     main_category_product_list = [
         'Электроника',
