@@ -34,10 +34,21 @@ def show_product(product_id):
     categorys = get_categorys()
     product = session.query(Product).filter_by(id=product_id).first()
     if not product:
-        pass
-    print(product.convert_to_dict())
+        return render_template(
+            'product.html', categorys=categorys, product=None
+        )
+    product_dict = product.convert_to_dict()
+    print(product_dict.get('parameters').items())
+    product_sorted_parameters = sorted(
+        product_dict.get('parameters').items(),
+        key=lambda x: x[1].get('priority')
+    )
     return render_template(
-        'product.html', categorys=categorys, product=product.convert_to_dict()
+        'product.html',
+        categorys=categorys,
+        product_name=product.name,
+        product_cost=product.cost,
+        product_parameters=product_sorted_parameters
     )
 
 

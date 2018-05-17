@@ -13,9 +13,13 @@
         {% endfor %}
       {% endfor %}
     </ul>
-    <h2>{{ product.name }} - {{ product.cost }} руб.</h2>
-    {% for parameter, value in product.parameters.items() %}
-    <p>{{ parameter }} - {{ value }}</p>
-    {% endfor %}
+    {% if product_name %}
+      <h2>{{ product_name }} - {{ product_cost }} руб.</h2>
+      {% for parameter, value in product_parameters %}
+      <p>{{ parameter }} - {{ value }}</p>
+      {% endfor %}
+    {% else %}
+      <h2>Запрошеный товар не найден</h2>
+    {% endif %}
   </body>
 </html>
