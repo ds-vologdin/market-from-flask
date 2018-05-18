@@ -37,18 +37,13 @@ def show_product(product_id):
         return render_template(
             'product.html', categorys=categorys, product=None
         )
+    # Сортировку надо перенести в метод модели
     product_dict = product.convert_to_dict()
-    print(product_dict.get('parameters').items())
-    product_sorted_parameters = sorted(
-        product_dict.get('parameters').items(),
-        key=lambda x: x[1].get('priority')
-    )
+    print(product_dict.get('parameters'))
     return render_template(
         'product.html',
         categorys=categorys,
-        product_name=product.name,
-        product_cost=product.cost,
-        product_parameters=product_sorted_parameters
+        product=product_dict,
     )
 
 

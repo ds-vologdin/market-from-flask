@@ -13,10 +13,15 @@
         {% endfor %}
       {% endfor %}
     </ul>
-    {% if product_name %}
-      <h2>{{ product_name }} - {{ product_cost }} руб.</h2>
-      {% for parameter, value in product_parameters %}
-      <p>{{ parameter }} - {{ value }}</p>
+    {% if product %}
+      <h2>{{ product.get('name') }} - {{ product.get('cost', 'не задана') }} руб.</h2>
+      {% for category_parameters, parameters in product.get('parameters') %}
+        <h3>{{ category_parameters }}</h3>
+        <ul>
+          {% for parameter, value in parameters.items() %}
+            <li>{{ parameter }} - {{ value }}</li>
+          {% endfor %}
+        </ul>
       {% endfor %}
     {% else %}
       <h2>Запрошеный товар не найден</h2>

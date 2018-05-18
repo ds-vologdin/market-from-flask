@@ -61,10 +61,21 @@ class Product(Base):
         return {
             'name': self.name,
             'cost': self.cost,
-            'parameters': self.parameters,
+            'parameters': self.sorted_parameters(),
         }
 
+    def sorted_parameters(self):
+        product_sorted_parameters = sorted(
+            self.parameters.items(),
+            key=lambda x: x[1].get('priority')
+        )
+        product_sorted_parameters = (
+            (category_parameters[0], category_parameters[1].get('parameters'))
+            for category_parameters in product_sorted_parameters
+        )
+        return product_sorted_parameters
 
+# TODO: параметры базы надо брать из конфига
 engine = create_engine(
     'postgresql://flask:coiw2IS8ph@10.0.3.143:5432/flask_market',
     json_serializer=json.dumps,
