@@ -30,7 +30,6 @@ def index():
 
 @app.route('/<int:product_id>/')
 def show_product(product_id):
-    print(product_id)
     categorys = get_categorys()
     product = session.query(Product).filter_by(id=product_id).first()
     if not product:

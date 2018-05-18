@@ -45,6 +45,14 @@ class Product(Base):
     cost = Column(Float)
     category_product_id = Column(Integer)
     parameters = Column(JSONB)
+    # тип parameters (JSONB) - привязывает нас к postgresql
+    # пока не понял как обратиться через sqlalchemy к вложенному элементу json
+    # однако на крайняк можно пользовать raw-sql:
+    # r = engine.execute(
+    #     "SELECT * FROM product
+    #     WHERE product.parameters->'Память и процессор'->'parameters'->'Количество ядер процессора' @> '8';"
+    # )
+    # Хотя может лучше иметь плоский словарь?..
 
     def __init__(self, name, cost, category_product_id, parameters):
         self.name = name
@@ -70,10 +78,21 @@ class Product(Base):
             key=lambda x: x[1].get('priority')
         )
         product_sorted_parameters = (
-            (category_parameters[0], category_parameters[1].get('parameters'))
+            (
+                category_parameters[0],
+                (
+                    category_parameters[1].get('main_parameters'),
+                    category_parameters[1].get('parameters')
+                )
+            )
             for category_parameters in product_sorted_parameters
         )
         return product_sorted_parameters
+
+    def flat_parameters(self):
+
+        pass
+
 
 # TODO: параметры базы надо брать из конфига
 engine = create_engine(

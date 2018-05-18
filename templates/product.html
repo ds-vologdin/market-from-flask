@@ -18,7 +18,10 @@
       {% for category_parameters, parameters in product.get('parameters') %}
         <h3>{{ category_parameters }}</h3>
         <ul>
-          {% for parameter, value in parameters.items() %}
+          {% for parameter, value in parameters[0].items() %}
+            <li>{{ parameter }} - {{ value }}</li>
+          {% endfor %}
+          {% for parameter, value in parameters[1].items() %}
             <li>{{ parameter }} - {{ value }}</li>
           {% endfor %}
         </ul>
