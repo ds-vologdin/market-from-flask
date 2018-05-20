@@ -17,6 +17,10 @@ class MainCategoryProduct(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(200), unique=True)
 
+    categorys_product = relationship(
+        'CategoryProduct', back_populates='main_category_product'
+    )
+
     def __init__(self, name):
         self.name = name
 
@@ -28,7 +32,14 @@ class CategoryProduct(Base):
     __tablename__ = 'category_product'
     id = Column(Integer, primary_key=True)
     name = Column(String(200), unique=True)
-    main_category_product_id = Column(Integer)
+    main_category_product_id = Column(
+        Integer, ForeignKey('main_category_product.id')
+    )
+
+    main_category_product = relationship(
+        'MainCategoryProduct', back_populates='categorys_product'
+    )
+    products = relationship('Product', back_populates='category_product')
 
     def __init__(self, name, main_category_product_id):
         self.name = name
@@ -61,7 +72,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
     cost = Column(Float)
-    category_product_id = Column(Integer)
+    category_product_id = Column(Integer, ForeignKey('category_product.id'))
     parameters = Column(JSONB)
     # тип parameters (JSONB) - привязывает нас к postgresql
     # пока не понял как обратиться через sqlalchemy к вложенному элементу json
@@ -73,6 +84,9 @@ class Product(Base):
     # Хотя может лучше иметь плоский словарь?..
 
     images = relationship('ImagesProduct', back_populates='product')
+    category_product = relationship(
+        'CategoryProduct', back_populates='products'
+    )
 
     def __init__(self, name, cost, category_product_id, parameters):
         self.name = name

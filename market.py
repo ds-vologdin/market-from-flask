@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask import request
-from models import session, MainCategoryProduct, CategoryProduct, Product
+from models import session, MainCategoryProduct, Product
 
 app = Flask(__name__)
 
@@ -9,9 +9,7 @@ def get_categorys():
     main_categorys = session.query(MainCategoryProduct).all()
     categorys = []
     for main_category in main_categorys:
-        sub_categorys = session.query(CategoryProduct).filter_by(
-            main_category_product_id=main_category.id
-        ).all()
+        sub_categorys = main_category.categorys_product
         sub_categorys_name = [
             sub_category.name for sub_category in sub_categorys
         ]
@@ -31,18 +29,23 @@ def index():
 @app.route('/<int:product_id>/')
 def show_product(product_id):
     categorys = get_categorys()
-    product = session.query(Product).filter_by(id=product_id).first()
+
+    product = session.query(Product).filter(Product.id == product_id).first()
     if not product:
         return render_template(
             'product.html', categorys=categorys, product=None
         )
-    # Сортировку надо перенести в метод модели
+
     product_dict = product.convert_to_dict()
     print(product_dict.get('parameters'))
+    category_product = product.category_product.name
+    main_category_product = product.category_product.main_category_product.name
     return render_template(
         'product.html',
         categorys=categorys,
         product=product_dict,
+        category_product=category_product,
+        main_category_product=main_category_product
     )
 
 

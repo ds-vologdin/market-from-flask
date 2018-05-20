@@ -15,6 +15,7 @@
     </ul>
     {% if product %}
       <h2>{{ product.get('name') }} - {{ product.get('cost', 'не задана') }} руб.</h2>
+      <h3>{{ main_category_product }} - {{ category_product }}</h3>
       {% for category_parameters, parameters in product.get('parameters') %}
         <h3>{{ category_parameters }}</h3>
         <ul>
