@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 
 from settings import DATABASES
 
@@ -40,6 +40,22 @@ class CategoryProduct(Base):
         )
 
 
+class ImagesProduct(Base):
+    __tablename__ = 'images_product'
+    id = Column(Integer, primary_key=True)
+    id_product = Column(Integer, ForeignKey('product.id'))
+    file = Column(String(200))
+    priority = Column(Integer)
+
+    product = relationship('Product', back_populates='images')
+
+    def __init__(self, id_product, file, priority=10):
+        self.id_product = id_product
+        self.file = file
+        self.priority = priority
+        pass
+
+
 class Product(Base):
     __tablename__ = 'product'
     id = Column(Integer, primary_key=True)
@@ -55,6 +71,8 @@ class Product(Base):
     #     WHERE product.parameters->'Память и процессор'->'parameters'->'Количество ядер процессора' @> '8';"
     # )
     # Хотя может лучше иметь плоский словарь?..
+
+    images = relationship('ImagesProduct', back_populates='product')
 
     def __init__(self, name, cost, category_product_id, parameters):
         self.name = name

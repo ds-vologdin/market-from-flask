@@ -1,5 +1,5 @@
-from models import MainCategoryProduct, CategoryProduct, Product, Base, \
-    session, engine
+from models import MainCategoryProduct, CategoryProduct, Product, \
+    ImagesProduct, Base, session, engine
 
 
 if __name__ == '__main__':
@@ -19,8 +19,8 @@ if __name__ == '__main__':
         main_category_product = MainCategoryProduct(name=category)
         session.add(main_category_product)
 
-    main_category_product = session.query(MainCategoryProduct).filter_by(
-        name='Электроника'
+    main_category_product = session.query(MainCategoryProduct).filter(
+        MainCategoryProduct.name == 'Электроника'
     ).first()
 
     category_product_list = [
@@ -33,8 +33,8 @@ if __name__ == '__main__':
         category_product = CategoryProduct(*category)
         session.add(category_product)
 
-    category_product = session.query(CategoryProduct).filter_by(
-        name='смартфоны'
+    category_product = session.query(CategoryProduct).filter(
+        CategoryProduct.name == 'смартфоны'
     ).first()
     products_list = [
         (
@@ -123,4 +123,17 @@ if __name__ == '__main__':
     for product_tuple in products_list:
         product = Product(*product_tuple)
         session.add(product)
+
+    product = session.query(Product.id).filter(
+        Product.name == 'Xiaomi Redmi 5 Plus 4/64GB'
+    ).first()
+    product_id = product[0]
+    images = [
+        (product_id, 'd2543e0e-5c2d-11e8-81fa-2089846029f1.jpeg', 0),
+        (product_id, '4d41d5d4-5c30-11e8-b708-2089846029f1.jpeg', 1),
+    ]
+    for image in images:
+        image_product = ImagesProduct(*image)
+        session.add(image_product)
+
     session.commit()
