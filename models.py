@@ -2,7 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
+
+from settings import DATABASES
 
 from flask import json
 
@@ -94,11 +96,15 @@ class Product(Base):
         pass
 
 
-# TODO: параметры базы надо брать из конфига
+default_db = DATABASES['default']
 engine = create_engine(
-    'postgresql://flask:coiw2IS8ph@10.0.3.143:5432/flask_market',
+    '{0}://{1}:{2}@{3}:{4}/{5}'.format(
+        default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],
+        default_db['HOST'], default_db['PORT'], default_db['DB']
+    ),
     json_serializer=json.dumps,
     echo=True,
 )
-Session = sessionmaker(bind=engine)
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
 session = Session()
