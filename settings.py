@@ -16,3 +16,5 @@ DATABASES = {
         key.upper(): config['FLASK_DB'][key] for key in config['FLASK_DB']
     }
 }
+
+PATH_IMAGES = config['IMAGE']['PATH']
