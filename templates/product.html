@@ -3,8 +3,32 @@
 {% block content %}
   <h1>Очень хороший интернет магазин</h1>
   {% if product %}
-    <h2>{{ product.get('name') }} - {{ product.get('cost', 'не задана') }} руб.</h2>
-    <h3>{{ main_category_product }} - {{ category_product }}</h3>
+    <a href="/main_category/{{ main_category_product.id }}/">{{ main_category_product.name }}</a> - <a href="/category/{{ category_product.id }}/">{{ category_product.name }}</a>
+    <h2>{{ product.name }} - {{ product.cost }} руб.</h2>
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Описание</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Характеристики</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Цены</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Карта</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Отзывы</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Обзоры</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Обсуждения</a>
+      </li>
+    </ul>
 
     {% for image_product in images_product %}
       <p><img src="{{ url_for('static', filename=image_product) }}" height="255"></p>

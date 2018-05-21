@@ -17,13 +17,21 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         {% for category in categorys %}
+          {% if main_category_product.id == category.main.id %}
+          <li class="nav-item dropdown active">
+          {% else %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ category.main }}
+          {% endif %}
+            <a class="nav-link dropdown-toggle" href="/main_category/{{ category.main }}/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ category.main.name }}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for sub_category in category.sub %}
-              <a class="dropdown-item" href="#">{{ sub_category }}</a>
+                {% if category_product.id == sub_category.id %}
+                  <a class="dropdown-item active" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
+                {% else %}
+                  <a class="dropdown-item" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
+                {% endif %}
               {% endfor %}
             </div>
           </li>
@@ -34,7 +42,7 @@
   <div id="content">{% block content %}{% endblock %}</div>
   <div id="footer">
     {% block footer %}
-    &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+    &copy; Copyright 2018 by D.Vologdin</a>.
     {% endblock %}
   </div>
   <!-- Optional JavaScript -->

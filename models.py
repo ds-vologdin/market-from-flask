@@ -124,7 +124,6 @@ class Product(Base):
         return product_sorted_parameters
 
     def flat_parameters(self):
-
         pass
 
 

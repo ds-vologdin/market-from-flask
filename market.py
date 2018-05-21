@@ -8,16 +8,13 @@ app = Flask(__name__)
 
 def get_categorys():
     main_categorys = session.query(MainCategoryProduct).all()
-    categorys = []
-    for main_category in main_categorys:
-        sub_categorys = main_category.categorys_product
-        sub_categorys_name = [
-            sub_category.name for sub_category in sub_categorys
-        ]
-        categorys.append({
-            'main': main_category.name,
-            'sub': sub_categorys_name,
-        })
+    categorys = [
+        {
+            'main': main_category,
+            'sub': main_category.categorys_product,
+        }
+        for main_category in main_categorys
+    ]
     return categorys
 
 
@@ -27,7 +24,19 @@ def index():
     return render_template('index.html', categorys=categorys)
 
 
-@app.route('/<int:product_id>/')
+@app.route('/main_category/<int:main_category_id>/')
+def show_main_category(main_category_id):
+    categorys = get_categorys()
+    return render_template('index.html', categorys=categorys)
+
+
+@app.route('/category/<int:category_id>/')
+def show_category(category_id):
+    categorys = get_categorys()
+    return render_template('index.html', categorys=categorys)
+
+
+@app.route('/product/<int:product_id>/')
 def show_product(product_id):
     categorys = get_categorys()
 
@@ -39,8 +48,7 @@ def show_product(product_id):
 
     product_dict = product.convert_to_dict()
     print(product_dict.get('parameters'))
-    category_product = product.category_product.name
-    main_category_product = product.category_product.main_category_product.name
+
     images_product = [(image.file, image.priority) for image in product.images]
     # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
     # приоритет выше
@@ -52,9 +60,9 @@ def show_product(product_id):
     return render_template(
         'product.html',
         categorys=categorys,
-        product=product_dict,
-        category_product=category_product,
-        main_category_product=main_category_product,
+        product=product,
+        category_product=product.category_product,
+        main_category_product=product.category_product.main_category_product,
         images_product=images_product,
     )
 
