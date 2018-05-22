@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Очень хороший интернет магазин</h1>
   {% if product %}
     <a href="/main_category/{{ main_category_product.id }}/">{{ main_category_product.name }}</a> - <a href="/category/{{ category_product.id }}/">{{ category_product.name }}</a>
     <h2>{{ product.name }} - {{ product.cost }} руб.</h2>
@@ -51,6 +50,10 @@
           </ul>
         {% endfor %}
       </div>
+      <h3>Основные параметры</h3>
+      {% for  parameter, value in main_parameters.items() %}
+        <p>{{ parameter }} - {{ value }}</p>
+      {% endfor %}
     </div>
   {% else %}
     <h2>Запрошеный товар не найден</h2>

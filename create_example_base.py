@@ -1,5 +1,5 @@
 from models import MainCategoryProduct, CategoryProduct, Product, \
-    ImagesProduct, Base, session, engine
+    ImagesProduct, CategoryProductMainParameters, Base, session, engine
 
 
 if __name__ == '__main__':
@@ -36,6 +36,23 @@ if __name__ == '__main__':
     category_product = session.query(CategoryProduct).filter(
         CategoryProduct.name == 'смартфоны'
     ).first()
+
+    category_product_main_parameters_list = [
+        'Операционная система',
+        'Количество SIM-карт',
+        'Диагональ',
+        'Тыловая фотокамера',
+        'Фронтальная камера',
+        'Стандарт',
+        'Интерфейсы',
+        'Спутниковая навигация',
+    ]
+    for parameter in category_product_main_parameters_list:
+        category_product_main_parameters = CategoryProductMainParameters(
+            parameter, category_product.id
+        )
+        session.add(category_product_main_parameters)
+
     products_list = [
         (
             'Xiaomi Redmi 5 Plus 4/64GB',

@@ -45,9 +45,17 @@ def show_product(product_id):
         return render_template(
             'product.html', categorys=categorys, product=None
         )
+    # main_parameters_name = product.category_product.\
+    #     categorys_product_main_parameters
+    #
+    # main_parameters_name = [
+    #     parameter.name for parameter in main_parameters_name
+    # ]
+    # main_parameters = product.get_flat_main_parameters(main_parameters_name)
+    main_parameters = product.get_flat_main_parameters()
 
-    product_dict = product.convert_to_dict()
-    print(product_dict.get('parameters'))
+    for parameter in main_parameters:
+        print(parameter, main_parameters[parameter])
 
     images_product = [(image.file, image.priority) for image in product.images]
     # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
@@ -56,7 +64,7 @@ def show_product(product_id):
         '{}/{}'.format(PATH_IMAGES, file)
         for file, priority in sorted(images_product, key=lambda x: x[1])
     ]
-    print(images_product)
+
     return render_template(
         'product.html',
         categorys=categorys,
@@ -64,6 +72,7 @@ def show_product(product_id):
         category_product=product.category_product,
         main_category_product=product.category_product.main_category_product,
         images_product=images_product,
+        main_parameters=main_parameters,
     )
 
 

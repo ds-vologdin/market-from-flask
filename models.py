@@ -28,10 +28,26 @@ class MainCategoryProduct(Base):
         return '<main_category_product({0})>'.format(self.name)
 
 
+class CategoryProductMainParameters(Base):
+    __tablename__ = 'category_product_main_parameters'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100))
+    category_product_id = Column(Integer, ForeignKey('category_product.id'))
+
+    category_product = relationship(
+        'CategoryProduct', back_populates='categorys_product_main_parameters'
+    )
+
+    def __init__(self, name, category_product_id):
+        self.name = name
+        self.category_product_id = category_product_id
+
+
 class CategoryProduct(Base):
     __tablename__ = 'category_product'
     id = Column(Integer, primary_key=True)
     name = Column(String(200), unique=True)
+    main_parameters_id = Column(Integer)
     main_category_product_id = Column(
         Integer, ForeignKey('main_category_product.id')
     )
@@ -40,6 +56,9 @@ class CategoryProduct(Base):
         'MainCategoryProduct', back_populates='categorys_product'
     )
     products = relationship('Product', back_populates='category_product')
+    categorys_product_main_parameters = relationship(
+        'CategoryProductMainParameters', back_populates='category_product'
+    )
 
     def __init__(self, name, main_category_product_id):
         self.name = name
@@ -93,6 +112,7 @@ class Product(Base):
         self.cost = cost
         self.category_product_id = category_product_id
         self.parameters = parameters
+        self.flat_parameters = self.get_flat_parameters()
 
     def __repr__(self):
         return '<product({0}, {1}, {2}, {3})>'.format(
@@ -123,8 +143,32 @@ class Product(Base):
         )
         return product_sorted_parameters
 
-    def flat_parameters(self):
-        pass
+    def get_flat_main_parameters(self, main_parameters=None):
+        if main_parameters is None:
+            main_parameters = [
+                parameter.name
+                for parameter in self.category_product.categorys_product_main_parameters
+            ]
+        flat_parameters = self.get_flat_parameters()
+        flat_main_parameters = {
+            parameter: flat_parameters[parameter]
+            for parameter in main_parameters
+            if parameter in flat_parameters
+        }
+        return flat_main_parameters
+
+    def get_flat_parameters(self):
+        parameters = {}
+        for category in self.parameters:
+            parameters_product = self.parameters[category].get('parameters')
+            for parameter, value in parameters_product.items():
+                parameters[parameter] = value
+            parameters_product = self.parameters[category].\
+                get('main_parameters')
+            for parameter, value in parameters_product.items():
+                parameters[parameter] = value
+        # self.flat_parameters = parameters
+        return parameters
 
 
 default_db = DATABASES['default']
