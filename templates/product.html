@@ -29,22 +29,29 @@
         <a class="nav-link" href="#">Обсуждения</a>
       </li>
     </ul>
-
-    {% for image_product in images_product %}
-      <p><img src="{{ url_for('static', filename=image_product) }}" height="255"></p>
-    {% endfor %}
-
-    {% for category_parameters, parameters in product.get('parameters') %}
-      <h3>{{ category_parameters }}</h3>
-      <ul>
-        {% for parameter, value in parameters[0].items() %}
-          <li>{{ parameter }} - {{ value }}</li>
+    <div class="row">
+      <div class="col-1">
+        {% for image_product in images_product %}
+          <p><img src="{{ url_for('static', filename=image_product) }}" height="100"></p>
         {% endfor %}
-        {% for parameter, value in parameters[1].items() %}
-          <li>{{ parameter }} - {{ value }}</li>
+      </div>
+      <div class="col-2">
+        <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
+      </div>
+      <div class="col-9">
+        {% for category_parameters, parameters in product.sorted_parameters() %}
+          <h3>{{ category_parameters }}</h3>
+          <ul>
+            {% for parameter, value in parameters[0].items() %}
+              <li>{{ parameter }} - {{ value }}</li>
+            {% endfor %}
+            {% for parameter, value in parameters[1].items() %}
+              <li>{{ parameter }} - {{ value }}</li>
+            {% endfor %}
+          </ul>
         {% endfor %}
-      </ul>
-    {% endfor %}
+      </div>
+    </div>
   {% else %}
     <h2>Запрошеный товар не найден</h2>
   {% endif %}

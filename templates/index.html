@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    <h1>Очень хороший интернет магазин</h1>
-    <ul>
-      {% for category in categorys %}
-        <li>{{ category.main }}</li>
-        {% for sub_category in category.sub %}
-          <p>{{ sub_category }}</p>
-        {% endfor %}
-      {% endfor %}
-    </ul>
-    <h2>Здесь могла быть Ваша реклама</h2>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<h1>Здесь могла быть ваша реклама</h1>
+{% endblock %}

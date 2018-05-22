@@ -13,37 +13,82 @@
   {% endblock %}
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        {% for category in categorys %}
-          {% if main_category_product.id == category.main.id %}
-          <li class="nav-item dropdown active">
-          {% else %}
-          <li class="nav-item dropdown">
-          {% endif %}
-            <a class="nav-link dropdown-toggle" href="/main_category/{{ category.main }}/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ category.main.name }}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% for sub_category in category.sub %}
-                {% if category_product.id == sub_category.id %}
-                  <a class="dropdown-item active" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
-                {% else %}
-                  <a class="dropdown-item" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
-                {% endif %}
-              {% endfor %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-8">
+        <form>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Маркет</span>
+              </div>
+              <input type="text" class="form-control" id="inputSearch" placeholder="введите поисковый запрос">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Найти</button>
+              </div>
             </div>
-          </li>
-        {% endfor %}
-      </ul>
+          </div>
+        </form>
+      </div>
+      <div class="col-4">
+        <div class="row">
+          <div class="col">
+            <a href="#">Город</a>
+          </div>
+          <div class="col">
+            <a href="#">Отложенные</a>
+          </div>
+          <div class="col">
+            <a href="#">Сравнение</a>
+          </div>
+          <div class="col">
+            <a href="#">Корзина</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </nav>
-  <div id="content">{% block content %}{% endblock %}</div>
-  <div id="footer">
-    {% block footer %}
-    &copy; Copyright 2018 by D.Vologdin</a>.
-    {% endblock %}
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          {% for category in categorys %}
+            {% if main_category_product %}
+              {% if main_category_product.id == category.main.id %}
+              <li class="nav-item dropdown active">
+              {% else %}
+              <li class="nav-item dropdown">
+              {% endif %}
+            {% else %}
+              <li class="nav-item dropdown">
+            {% endif %}
+              <a class="nav-link dropdown-toggle" href="/main_category/{{ category.main }}/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ category.main.name }}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% for sub_category in category.sub %}
+                  {% if category_product %}
+                    {% if category_product.id == sub_category.id %}
+                      <a class="dropdown-item active" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
+                    {% else %}
+                      <a class="dropdown-item" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
+                    {% endif %}
+                  {% else %}
+                    <a class="dropdown-item" href="/category/{{ sub_category.id }}/">{{ sub_category.name }}</a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </nav>
+
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2018 by D.Vologdin</a>.
+      {% endblock %}
+    </div>
   </div>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
