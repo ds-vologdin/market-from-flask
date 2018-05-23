@@ -30,12 +30,16 @@
         <div role="tabpanel" class="tab-pane fade active show" id="description" aria-labelledby="description-tab" aria-expanded="true">
           <div class="row">
             <div class="col-1">
-              {% for image_product in images_product %}
-                <p><img src="{{ url_for('static', filename=image_product) }}" height="100"></p>
-              {% endfor %}
+              {% if images_product %}
+                {% for image_product in images_product %}
+                  <p><img src="{{ url_for('static', filename=image_product) }}" height="100"></p>
+                {% endfor %}
+              {% endif %}
             </div>
             <div class="col-2">
-              <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
+              {% if images_product %}
+                <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
+              {% endif %}
             </div>
             <div class="col-9">
               <h3>Коротко о товаре</h3>
@@ -51,7 +55,9 @@
         <div class="tab-pane fade" id="parameter" role="tabpanel" aria-labelledby="parameter-tab" aria-expanded="false">
           <div class="row">
             <div class="col-2">
-              <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
+              {% if images_product %}
+                <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
+              {% endif %}
             </div>
             <div class="col-10">
               <h2>Характеристики</h2>

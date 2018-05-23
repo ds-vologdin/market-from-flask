@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask import request
-from models import session, MainCategoryProduct, Product
+from models import session, MainCategoryProduct, Product, CategoryProduct
 from settings import PATH_IMAGES
 
 app = Flask(__name__)
@@ -33,7 +33,31 @@ def show_main_category(main_category_id):
 @app.route('/category/<int:category_id>/')
 def show_category(category_id):
     categorys = get_categorys()
-    return render_template('index.html', categorys=categorys)
+    category = session.query(CategoryProduct).\
+        filter(CategoryProduct.id == category_id).first()
+    if not category:
+        return render_template(
+            'subcategory_products.html',
+            categorys=categorys,
+            category=None,
+            products=None,
+            )
+    products_info = []
+
+    for product in category.products:
+        products_info.append({
+            'id': product.id,
+            'product_name': product.name,
+            'rating': product.rating,
+            'cost': product.cost,
+            'description': product.description,
+            'images': get_images_product(product),
+        })
+    return render_template(
+        'subcategory_products.html',
+        categorys=categorys,
+        products=products_info,
+    )
 
 
 def get_images_product(product):

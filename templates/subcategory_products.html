@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-deck">
+{% for product in products %}
+  <div class="card text-center" style="width: 18rem;">
+    <img src="{{ url_for('static', filename=product.get('images')[0]) }}" width="100" align="middle" class="align-self-center">
+    <div class="card-body">
+      <h5 class="card-title">{{ product.get('product_name') }} - {{ product.get('cost') }} руб.</h5>
+      <p class="card-text">Ретинг пользователей: {{ product.get('rating') }}</p>
+      <p class="card-text">{{ product.get('description') }}</p>
+      <a href="/product/{{ product.id }}/" class="btn btn-primary">Посмотреть</a>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}
