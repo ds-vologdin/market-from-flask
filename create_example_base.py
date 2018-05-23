@@ -59,7 +59,8 @@ if __name__ == '__main__':
             'Xiaomi Redmi 5 Plus 4/64GB',
             'Хороший телефон, бери не пожалеешь...',
             13290.00,
-            category_product.id, {
+            category_product.id,
+            {
                 'Общие характеристики': {
                         'priority': 0,
                         # priority используем для сортировки категорий
@@ -136,7 +137,8 @@ if __name__ == '__main__':
                         'Емкость аккумулятора': 4000,
                     },
                 },
-            }
+            },
+            4
         )
     ]
     for product_tuple in products_list:

@@ -4,8 +4,9 @@
   {% if product %}
     <a href="/main_category/{{ main_category_product.id }}/">{{ main_category_product.name }}</a> - <a href="/category/{{ category_product.id }}/">{{ category_product.name }}</a>
     <h2>{{ product.name }} - {{ product.cost }} руб.</h2>
+    <p>Рэйтинг пользователей: {{ product.rating }}</p>
     <div class="bd-example bd-example-tabs" role="tabpanel">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <ul class="nav nav-tabs nav-fill sticky-top bg-light" id="myTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="home" aria-expanded="true">Описание</a>
         </li>
@@ -16,10 +17,7 @@
           <a class="nav-link" id="costs-tab" data-toggle="tab" href="#costs" role="tab" aria-controls="profile" aria-expanded="false">Цены</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="profile" aria-expanded="false">Карта</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="profile" aria-expanded="false">Отзывы</a>
+          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="profile" aria-expanded="false">Отзывы {{ feedbacks|length }}</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="profile" aria-expanded="false">Обзоры</a>
@@ -74,14 +72,16 @@
         <div class="tab-pane fade" id="costs" role="tabpanel" aria-labelledby="costs-tab" aria-expanded="false">
           <p>Costs</p>
         </div>
-        <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab" aria-expanded="false">
-          <p>Map</p>
-        </div>
         <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab" aria-expanded="false">
-          <p>feedback</p>
+          {% for feedback in feedbacks %}
+            <h3>{{ feedback.user.name }}</h3>
+            <p>Общая оценка: {{ feedback.rating }}</p>
+            <p>{{ feedback.description }}</p>
+            <hr>
+          {% endfor %}
         </div>
         <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="overview-tab" aria-expanded="false">
-          <p>feedback</p>
+          <p>overview</p>
         </div>
         <div class="tab-pane fade" id="discussion" role="tabpanel" aria-labelledby="discussion-tab" aria-expanded="false">
           <p>discussion</p>

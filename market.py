@@ -52,7 +52,7 @@ def get_images_product(product):
     return images_product
 
 
-@app.route('/product/<int:product_id>/', methods=['GET', 'POST'])
+@app.route('/product/<int:product_id>/')
 def show_product(product_id):
     categorys = get_categorys()
 
@@ -66,6 +66,8 @@ def show_product(product_id):
 
     images_product = get_images_product(product)
 
+    feedbacks = product.feedbacks
+
     return render_template(
         'product.html',
         categorys=categorys,
@@ -74,6 +76,7 @@ def show_product(product_id):
         main_category_product=product.category_product.main_category_product,
         images_product=images_product,
         main_parameters=main_parameters,
+        feedbacks=feedbacks
     )
 
 

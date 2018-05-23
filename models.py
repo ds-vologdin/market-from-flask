@@ -120,6 +120,7 @@ class Product(Base):
         self.category_product_id = category_product_id
         self.parameters = parameters
         self.flat_parameters = self.get_flat_parameters()
+        self.rating = rating
 
     def __repr__(self):
         return '<product({0}, {1}, {2}, {3})>'.format(
