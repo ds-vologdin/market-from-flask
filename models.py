@@ -90,6 +90,7 @@ class Product(Base):
     __tablename__ = 'product'
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
+    description = Column(String)
     cost = Column(Float)
     category_product_id = Column(Integer, ForeignKey('category_product.id'))
     parameters = Column(JSONB)
@@ -107,8 +108,10 @@ class Product(Base):
         'CategoryProduct', back_populates='products'
     )
 
-    def __init__(self, name, cost, category_product_id, parameters):
+    def __init__(self, name, description, cost, category_product_id,
+                 parameters):
         self.name = name
+        self.description = description
         self.cost = cost
         self.category_product_id = category_product_id
         self.parameters = parameters

@@ -40,12 +40,13 @@
               <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
             </div>
             <div class="col-9">
-              <h3>Основные параметры</h3>
+              <h3>Коротко о товаре</h3>
               <ul>
                 {% for  parameter, value in main_parameters.items() %}
                   <li>{{ parameter }} - {{ value }}</li>
                 {% endfor %}
               </ul>
+              <p>{{ product.description }}</p>
             </div>
           </div>
         </div>
@@ -55,7 +56,7 @@
               <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
             </div>
             <div class="col-10">
-              <h2>Основные характеристики</h2>
+              <h2>Характеристики</h2>
               {% for category_parameters, parameters in product.sorted_parameters() %}
                 <h3>{{ category_parameters }}</h3>
                 <ul>

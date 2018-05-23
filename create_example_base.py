@@ -56,6 +56,7 @@ if __name__ == '__main__':
     products_list = [
         (
             'Xiaomi Redmi 5 Plus 4/64GB',
+            'Хороший телефон, бери не пожалеешь...',
             13290.00,
             category_product.id, {
                 'Общие характеристики': {
