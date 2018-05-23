@@ -1,5 +1,6 @@
 from models import MainCategoryProduct, CategoryProduct, Product, \
-    ImagesProduct, CategoryProductMainParameters, Base, session, engine
+    ImagesProduct, CategoryProductMainParameters, User, Feedback, \
+    Base, session, engine
 
 
 if __name__ == '__main__':
@@ -153,5 +154,33 @@ if __name__ == '__main__':
     for image in images:
         image_product = ImagesProduct(*image)
         session.add(image_product)
+
+    users = [
+        ('terminator', 'Вася', 'Москва'),
+        ('gingema', 'Катя', 'Хабаровск'),
+        ('cheburator', 'Толя', 'Курск'),
+    ]
+    for user in users:
+        user_market = User(*user)
+        session.add(user_market)
+
+    terminator = session.query(User).filter(User.login == 'terminator').first()
+    feedback = Feedback(
+        'Очень хороший телефон. Рекомендую.',
+        5, terminator.id, product_id
+    )
+    session.add(feedback)
+    gingema = session.query(User).filter(User.login == 'gingema').first()
+    feedback = Feedback(
+        'не понравился...',
+        3, gingema.id, product_id
+    )
+    session.add(feedback)
+    cheburator = session.query(User).filter(User.login == 'cheburator').first()
+    feedback = Feedback(
+        'Через месяц поменял экран, хрупкий',
+        4, cheburator.id, product_id
+    )
+    session.add(feedback)
 
     session.commit()

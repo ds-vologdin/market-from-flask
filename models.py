@@ -93,6 +93,9 @@ class Product(Base):
     description = Column(String)
     cost = Column(Float)
     category_product_id = Column(Integer, ForeignKey('category_product.id'))
+    rating = Column(Integer)
+    # rating - величина рассчётная (считается по feedback раз в день)
+    # если имеет значение 0 - значит рейтинга нет
     parameters = Column(JSONB)
     # тип parameters (JSONB) - привязывает нас к postgresql
     # пока не понял как обратиться через sqlalchemy к вложенному элементу json
@@ -107,9 +110,10 @@ class Product(Base):
     category_product = relationship(
         'CategoryProduct', back_populates='products'
     )
+    feedbacks = relationship('Feedback', back_populates='product')
 
     def __init__(self, name, description, cost, category_product_id,
-                 parameters):
+                 parameters, rating=0):
         self.name = name
         self.description = description
         self.cost = cost
@@ -148,9 +152,11 @@ class Product(Base):
 
     def get_flat_main_parameters(self, main_parameters=None):
         if main_parameters is None:
+            main_parameters_in_db = \
+                self.category_product.categorys_product_main_parameters
             main_parameters = [
                 parameter.name
-                for parameter in self.category_product.categorys_product_main_parameters
+                for parameter in main_parameters_in_db
             ]
         flat_parameters = self.get_flat_parameters()
         flat_main_parameters = {
@@ -172,6 +178,40 @@ class Product(Base):
                 parameters[parameter] = value
         # self.flat_parameters = parameters
         return parameters
+
+
+class Feedback(Base):
+    __tablename__ = 'feedback'
+    id = Column(Integer, primary_key=True)
+    description = Column(String)
+    rating = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='feedbacks')
+    product_id = Column(Integer, ForeignKey('product.id'))
+    product = relationship('Product', back_populates='feedbacks')
+
+    def __init__(self, description, rating, user_id, product_id):
+        self.description = description
+        self.rating = rating
+        self.user_id = user_id
+        self.product_id = product_id
+
+
+class User(Base):
+    ''' Класс используется только для связи с Feedback, так что
+    сильно не полный '''
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    login = Column(String(20), unique=True)
+    name = Column(String(100))
+    city = Column(String(100))
+    # TODO: city - связка с таблицей городов, а пока просто строка
+    feedbacks = relationship('Feedback', back_populates='user')
+
+    def __init__(self, login, name, city):
+        self.login = login
+        self.name = name
+        self.city = city
 
 
 default_db = DATABASES['default']
