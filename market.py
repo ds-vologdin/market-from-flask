@@ -36,7 +36,23 @@ def show_category(category_id):
     return render_template('index.html', categorys=categorys)
 
 
-@app.route('/product/<int:product_id>/')
+def get_images_product(product):
+    if not product:
+        None
+
+    images_product = [(image.file, image.priority) for image in product.images]
+    if not images_product:
+        return None
+    # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
+    # приоритет выше
+    images_product = [
+        '{}/{}'.format(PATH_IMAGES, file)
+        for file, priority in sorted(images_product, key=lambda x: x[1])
+    ]
+    return images_product
+
+
+@app.route('/product/<int:product_id>/', methods=['GET', 'POST'])
 def show_product(product_id):
     categorys = get_categorys()
 
@@ -45,25 +61,10 @@ def show_product(product_id):
         return render_template(
             'product.html', categorys=categorys, product=None
         )
-    # main_parameters_name = product.category_product.\
-    #     categorys_product_main_parameters
-    #
-    # main_parameters_name = [
-    #     parameter.name for parameter in main_parameters_name
-    # ]
-    # main_parameters = product.get_flat_main_parameters(main_parameters_name)
+    # TODO: надо подумать, может в шаблон перенести вызов функции?
     main_parameters = product.get_flat_main_parameters()
 
-    for parameter in main_parameters:
-        print(parameter, main_parameters[parameter])
-
-    images_product = [(image.file, image.priority) for image in product.images]
-    # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
-    # приоритет выше
-    images_product = [
-        '{}/{}'.format(PATH_IMAGES, file)
-        for file, priority in sorted(images_product, key=lambda x: x[1])
-    ]
+    images_product = get_images_product(product)
 
     return render_template(
         'product.html',
