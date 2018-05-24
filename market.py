@@ -74,6 +74,8 @@ def show_category(category_id):
         'subcategory_products.html',
         categorys=categorys,
         products=products_info,
+        category=category,
+        main_category=category.main_category_product
     )
 
 

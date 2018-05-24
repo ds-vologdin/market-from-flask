@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<h3><a href="/main_category/{{ main_category.id }}/">{{ main_category.name }}</a> - <a href="/category/{{ category.id }}/">{{ category.name }}</a></h3>
 <div class="row">
   {% for product in products %}
     <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
