@@ -5,6 +5,7 @@ import logging
 from settings import config
 
 app = Flask(__name__)
+logging.debug('Создали app (app = Flask(__name__))')
 
 
 def get_categorys():
@@ -114,6 +115,7 @@ def show_product(product_id):
 
 @app.route('/api/add_product', methods=['POST'])
 def api_add_product():
+    logging.debug('Кто-то пытается пользоваться API. ХА-ХА-ХА...')
     print(request.get_json(force=True))
     return 'OK'
 

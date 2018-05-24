@@ -12,23 +12,28 @@ from settings import config
 databases = config.get('DATABASES')
 if not databases:
     logging.error('В конфиге не описана БД')
+
 default_db = databases.get('default')
 if not default_db:
     logging.error('Проблемы с конфигом БД. Надо смотреть settings.py и конфиг')
+
 engine = create_engine(
     '{0}://{1}:{2}@{3}:{4}/{5}'.format(
         default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],
         default_db['HOST'], default_db['PORT'], default_db['DB']
     ),
     json_serializer=json.dumps,
-    echo=True,
+    echo=False,
 )
+logging.debug('Создали engine')
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
 session = Session()
+logging.debug('Создали session')
 
 Base = declarative_base()
 Base.query = Session.query_property()
+logging.debug('Создали Base')
 
 
 class MainCategoryProduct(Base):

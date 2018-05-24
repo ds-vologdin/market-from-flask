@@ -82,3 +82,4 @@ if logging_config:
         level=logging_config.get('LEVEL'),
         format='%(asctime)s:%(levelname)s:%(message)s'
     )
+    logging.debug('Инициализация logging')
