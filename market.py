@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask import request
 from models import MainCategoryProduct, Product, CategoryProduct
+import logging
 from settings import config
 
 app = Flask(__name__)
@@ -36,6 +37,7 @@ def show_category(category_id):
     category = CategoryProduct.query.\
         filter(CategoryProduct.id == category_id).first()
     if not category:
+        logging.debug('Запрос категории по несуществующему id')
         return render_template(
             'subcategory_products.html',
             categorys=categorys,
@@ -66,6 +68,9 @@ def get_images_product(product):
 
     images_product = [(image.file, image.priority) for image in product.images]
     if not images_product:
+        logging.debug('У продукта с id "{}" не найдены изображения'.format(
+            product.id
+        ))
         return None
 
     path_images = config.get('PATH_IMAGES')
@@ -84,6 +89,7 @@ def show_product(product_id):
 
     product = Product.query.filter(Product.id == product_id).first()
     if not product:
+        logging.debug('Запрос продукта по несуществующему id')
         return render_template(
             'product.html', categorys=categorys, product=None
         )

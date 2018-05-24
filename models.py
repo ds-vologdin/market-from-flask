@@ -3,14 +3,18 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
+from flask import json
+import logging
 
 from settings import config
 
-from flask import json
-
 
 databases = config.get('DATABASES')
+if not databases:
+    logging.error('В конфиге не описана БД')
 default_db = databases.get('default')
+if not default_db:
+    logging.error('Проблемы с конфигом БД. Надо смотреть settings.py и конфиг')
 engine = create_engine(
     '{0}://{1}:{2}@{3}:{4}/{5}'.format(
         default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],
