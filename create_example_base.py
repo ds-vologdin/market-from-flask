@@ -20,7 +20,7 @@ if __name__ == '__main__':
         main_category_product = MainCategoryProduct(name=category)
         session.add(main_category_product)
 
-    main_category_product = session.query(MainCategoryProduct).filter(
+    main_category_product = MainCategoryProduct.query.filter(
         MainCategoryProduct.name == 'Электроника'
     ).first()
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         category_product = CategoryProduct(*category)
         session.add(category_product)
 
-    category_product = session.query(CategoryProduct).filter(
+    category_product = CategoryProduct.query.filter(
         CategoryProduct.name == 'смартфоны'
     ).first()
 
@@ -251,19 +251,19 @@ if __name__ == '__main__':
         user_market = User(*user)
         session.add(user_market)
 
-    terminator = session.query(User).filter(User.login == 'terminator').first()
+    terminator = User.query.filter(User.login == 'terminator').first()
     feedback = Feedback(
         'Очень хороший телефон. Рекомендую.',
         5, terminator.id, product_id
     )
     session.add(feedback)
-    gingema = session.query(User).filter(User.login == 'gingema').first()
+    gingema = User.query.filter(User.login == 'gingema').first()
     feedback = Feedback(
         'не понравился...',
         3, gingema.id, product_id
     )
     session.add(feedback)
-    cheburator = session.query(User).filter(User.login == 'cheburator').first()
+    cheburator = User.query.filter(User.login == 'cheburator').first()
     feedback = Feedback(
         'Через месяц поменял экран, хрупкий',
         4, cheburator.id, product_id

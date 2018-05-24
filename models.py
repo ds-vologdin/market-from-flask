@@ -9,7 +9,21 @@ from settings import DATABASES
 from flask import json
 
 
+default_db = DATABASES['default']
+engine = create_engine(
+    '{0}://{1}:{2}@{3}:{4}/{5}'.format(
+        default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],
+        default_db['HOST'], default_db['PORT'], default_db['DB']
+    ),
+    json_serializer=json.dumps,
+    echo=True,
+)
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
+session = Session()
+
 Base = declarative_base()
+Base.query = Session.query_property()
 
 
 class MainCategoryProduct(Base):
@@ -105,6 +119,7 @@ class Product(Base):
     #     WHERE product.parameters->'Память и процессор'->'parameters'->'Количество ядер процессора' @> '8';"
     # )
     # Хотя может лучше иметь плоский словарь?..
+    # Так же надо подумать над заданием приоритета параметрам (для сортировки)
 
     images = relationship('ImagesProduct', back_populates='product')
     category_product = relationship(
@@ -213,17 +228,3 @@ class User(Base):
         self.login = login
         self.name = name
         self.city = city
-
-
-default_db = DATABASES['default']
-engine = create_engine(
-    '{0}://{1}:{2}@{3}:{4}/{5}'.format(
-        default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],
-        default_db['HOST'], default_db['PORT'], default_db['DB']
-    ),
-    json_serializer=json.dumps,
-    echo=True,
-)
-session_factory = sessionmaker(bind=engine)
-Session = scoped_session(session_factory)
-session = Session()
