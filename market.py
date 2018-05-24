@@ -29,7 +29,22 @@ def index():
 @app.route('/main_category/<int:main_category_id>/')
 def show_main_category(main_category_id):
     categorys = get_categorys()
-    return render_template('index.html', categorys=categorys)
+    main_category = MainCategoryProduct.query.\
+        filter(MainCategoryProduct.id == main_category_id).first()
+    if not main_category:
+        logging.debug('Запрос основной категории по несуществующему id')
+        return render_template(
+            'subcategory.html',
+            categorys=categorys,
+            main_category=None,
+            sub_category=None,
+            )
+    return render_template(
+        'subcategory.html',
+        categorys=categorys,
+        main_category=main_category,
+        sub_categorys=main_category.categorys_product,
+    )
 
 
 @app.route('/category/<int:category_id>/')
@@ -42,7 +57,6 @@ def show_category(category_id):
         return render_template(
             'subcategory_products.html',
             categorys=categorys,
-            category=None,
             products=None,
             )
     products_info = []

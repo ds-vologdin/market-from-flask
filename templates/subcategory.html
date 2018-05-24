@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+  {% if main_category %}
+  <div class="row">
+    <h1>{{ main_category.name }}</h1>
+  </div>
+  <div class="row">
+    <ul>
+      {% for category in sub_categorys %}
+        <li><a href="/category/{{ category.id }}/">{{ category.name }}</a></li>
+      {% else %}
+        <p>Подкатегорий пока нет. Извините...</p>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+{% endblock %}
