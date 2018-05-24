@@ -4,12 +4,13 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 
-from settings import DATABASES
+from settings import config
 
 from flask import json
 
 
-default_db = DATABASES['default']
+databases = config.get('DATABASES')
+default_db = databases.get('default')
 engine = create_engine(
     '{0}://{1}:{2}@{3}:{4}/{5}'.format(
         default_db['ENGINE'], default_db['USER'], default_db['PASSWORD'],

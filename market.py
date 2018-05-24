@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask import request
 from models import MainCategoryProduct, Product, CategoryProduct
-from settings import PATH_IMAGES
+from settings import config
 
 app = Flask(__name__)
 
@@ -67,10 +67,12 @@ def get_images_product(product):
     images_product = [(image.file, image.priority) for image in product.images]
     if not images_product:
         return None
+
+    path_images = config.get('PATH_IMAGES')
     # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
     # приоритет выше
     images_product = [
-        '{}/{}'.format(PATH_IMAGES, file)
+        '{}/{}'.format(path_images, file)
         for file, priority in sorted(images_product, key=lambda x: x[1])
     ]
     return images_product
