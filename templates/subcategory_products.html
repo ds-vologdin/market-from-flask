@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<h3><a href="/main_category/{{ main_category.id }}/">{{ main_category.name }}</a> - <a href="/category/{{ category.id }}/">{{ category.name }}</a></h3>
-<div class="row">
-  {% for product in products %}
-    <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
-      <div class="card text-center" >
-        <img src="{{ url_for('static', filename=product.get('images')[0]) }}" width="100" align="middle" class="align-self-center">
-        <div class="card-body">
-          <h5 class="card-title">{{ product.get('product_name') }} - {{ product.get('cost') }} руб.</h5>
-          <p class="card-text">Ретинг пользователей: {{ product.get('rating') }}</p>
-          <p class="card-text">{{ product.get('description') }}</p>
-          <a href="/product/{{ product.id }}/" class="btn btn-primary">Посмотреть</a>
+{% if main_category and category %}
+  <h3><a href="/main_category/{{ main_category.id }}/">{{ main_category.name }}</a> - <a href="/category/{{ category.id }}/">{{ category.name }}</a></h3>
+  <div class="row">
+    {% for product in products %}
+      <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
+        <div class="card text-center" >
+          <img src="{{ url_for('static', filename=product.get('images')[0]) }}" width="100" align="middle" class="align-self-center">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.get('product_name') }} - {{ product.get('cost') }} руб.</h5>
+            <p class="card-text">Ретинг пользователей: {{ product.get('rating') }}</p>
+            <p class="card-text">{{ product.get('description') }}</p>
+            <a href="/product/{{ product.id }}/" class="btn btn-primary">Посмотреть</a>
+          </div>
         </div>
       </div>
-    </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Категория не найдена<p>
+{% endif %}
 {% endblock %}
