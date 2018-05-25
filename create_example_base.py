@@ -1,9 +1,10 @@
+import sys
 from models import MainCategoryProduct, CategoryProduct, Product, \
     ImagesProduct, CategoryProductMainParameters, User, Feedback, \
     Base, session, engine
 
 
-if __name__ == '__main__':
+def main(sesion):
     Base.metadata.create_all(engine)
 
     main_category_product_list = [
@@ -17,8 +18,7 @@ if __name__ == '__main__':
         'Авто',
     ]
     for category in main_category_product_list:
-        main_category_product = MainCategoryProduct(name=category)
-        session.add(main_category_product)
+        session.add(MainCategoryProduct(name=category))
 
     main_category_product = MainCategoryProduct.query.filter(
         MainCategoryProduct.name == 'Электроника'
@@ -31,8 +31,7 @@ if __name__ == '__main__':
         ('mp3-плееры', main_category_product.id),
     ]
     for category in category_product_list:
-        category_product = CategoryProduct(*category)
-        session.add(category_product)
+        session.add(CategoryProduct(*category))
 
     category_product = CategoryProduct.query.filter(
         CategoryProduct.name == 'смартфоны'
@@ -49,10 +48,9 @@ if __name__ == '__main__':
         'Спутниковая навигация',
     ]
     for parameter in category_product_main_parameters_list:
-        category_product_main_parameters = CategoryProductMainParameters(
-            parameter, category_product.id
+        session.add(
+            CategoryProductMainParameters(parameter, category_product.id)
         )
-        session.add(category_product_main_parameters)
 
     products_list = [
         (
@@ -227,8 +225,7 @@ if __name__ == '__main__':
         )
     ]
     for product_tuple in products_list:
-        product = Product(*product_tuple)
-        session.add(product)
+        session.add(Product(*product_tuple))
 
     product = session.query(Product.id).filter(
         Product.name == 'Xiaomi Redmi 5 Plus 4/64GB'
@@ -239,8 +236,7 @@ if __name__ == '__main__':
         (product_id, '4d41d5d4-5c30-11e8-b708-2089846029f1.jpeg', 1),
     ]
     for image in images:
-        image_product = ImagesProduct(*image)
-        session.add(image_product)
+        session.add(ImagesProduct(*image))
 
     users = [
         ('terminator', 'Вася', 'Москва'),
@@ -248,26 +244,22 @@ if __name__ == '__main__':
         ('cheburator', 'Толя', 'Курск'),
     ]
     for user in users:
-        user_market = User(*user)
-        session.add(user_market)
+        session.add(User(*user))
 
     terminator = User.query.filter(User.login == 'terminator').first()
-    feedback = Feedback(
-        'Очень хороший телефон. Рекомендую.',
-        5, terminator.id, product_id
-    )
-    session.add(feedback)
     gingema = User.query.filter(User.login == 'gingema').first()
-    feedback = Feedback(
-        'не понравился...',
-        3, gingema.id, product_id
-    )
-    session.add(feedback)
     cheburator = User.query.filter(User.login == 'cheburator').first()
-    feedback = Feedback(
-        'Через месяц поменял экран, хрупкий',
-        4, cheburator.id, product_id
-    )
-    session.add(feedback)
+
+    comments = [
+        ('Очень хороший телефон. Рекомендую.', 5, terminator.id, product_id),
+        ('не понравился...', 3, gingema.id, product_id),
+        ('Через месяц поменял экран, хрупкий.', 4, cheburator.id, product_id),
+    ]
+    for comment in comments:
+        session.add(Feedback(*comment))
 
     session.commit()
+
+
+if __name__ == '__main__':
+    sys.exit(main(session))
