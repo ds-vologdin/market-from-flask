@@ -4,9 +4,6 @@ import logging
 
 
 def convert_str_to_logging_level(level_str=None):
-    if not level_str:
-        # Значение по умолчанию
-        return logging.WARNING
     if level_str == 'DEBUG':
         return logging.DEBUG
     if level_str == 'INFO':
@@ -17,6 +14,8 @@ def convert_str_to_logging_level(level_str=None):
         return logging.ERROR
     if level_str == 'CRITICAL':
         return logging.CRITICAL
+    # Значение по умолчанию
+    return logging.WARNING
 
 
 def parse_config_section_base(config=None):
@@ -32,7 +31,7 @@ def parse_config_section_base(config=None):
         }
     }
     # Эта секция приведена для примера, как расширять конфиг
-    # Можно разделить TEST БД от PROD БД
+    # Можно разделить TEST БД и PROD БД
     # if 'TEST_DB' not in config:
     #     databases.update({
     #         'test': {
