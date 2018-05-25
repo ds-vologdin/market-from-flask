@@ -1,12 +1,10 @@
 import sys
 from models import MainCategoryProduct, CategoryProduct, Product, \
     ImagesProduct, CategoryProductMainParameters, User, Feedback, \
-    Base, session, engine
+    Base, session_global, engine
 
 
-def main(sesion):
-    Base.metadata.create_all(engine)
-
+def insert_main_category(session):
     main_category_product_list = [
         'Электроника',
         'Бытовая техника',
@@ -19,7 +17,10 @@ def main(sesion):
     ]
     for category in main_category_product_list:
         session.add(MainCategoryProduct(name=category))
+    session.commit()
 
+
+def insert_sub_category(session):
     main_category_product = MainCategoryProduct.query.filter(
         MainCategoryProduct.name == 'Электроника'
     ).first()
@@ -32,7 +33,10 @@ def main(sesion):
     ]
     for category in category_product_list:
         session.add(CategoryProduct(*category))
+    session.commit()
 
+
+def insert_categor_product_main_parameters(session):
     category_product = CategoryProduct.query.filter(
         CategoryProduct.name == 'смартфоны'
     ).first()
@@ -51,6 +55,13 @@ def main(sesion):
         session.add(
             CategoryProductMainParameters(parameter, category_product.id)
         )
+    session.commit()
+
+
+def insert_products(session):
+    category_product = CategoryProduct.query.filter(
+        CategoryProduct.name == 'смартфоны'
+    ).first()
 
     products_list = [
         (
@@ -226,7 +237,10 @@ def main(sesion):
     ]
     for product_tuple in products_list:
         session.add(Product(*product_tuple))
+    session.commit()
 
+
+def insert_images_product(session):
     product = session.query(Product.id).filter(
         Product.name == 'Xiaomi Redmi 5 Plus 4/64GB'
     ).first()
@@ -237,7 +251,10 @@ def main(sesion):
     ]
     for image in images:
         session.add(ImagesProduct(*image))
+    session.commit()
 
+
+def insert_users(session):
     users = [
         ('terminator', 'Вася', 'Москва'),
         ('gingema', 'Катя', 'Хабаровск'),
@@ -245,21 +262,39 @@ def main(sesion):
     ]
     for user in users:
         session.add(User(*user))
+    session.commit()
+
+
+def insert_feedback(session):
+    product = Product.query.filter(
+        Product.name == 'Xiaomi Redmi 5 Plus 4/64GB'
+    ).first()
 
     terminator = User.query.filter(User.login == 'terminator').first()
     gingema = User.query.filter(User.login == 'gingema').first()
     cheburator = User.query.filter(User.login == 'cheburator').first()
 
     comments = [
-        ('Очень хороший телефон. Рекомендую.', 5, terminator.id, product_id),
-        ('не понравился...', 3, gingema.id, product_id),
-        ('Через месяц поменял экран, хрупкий.', 4, cheburator.id, product_id),
+        ('Очень хороший телефон. Рекомендую.', 5, terminator.id, product.id),
+        ('не понравился...', 3, gingema.id, product.id),
+        ('Через месяц поменял экран, хрупкий.', 4, cheburator.id, product.id),
     ]
     for comment in comments:
         session.add(Feedback(*comment))
-
     session.commit()
 
 
+def main(session):
+    Base.metadata.create_all(engine)
+
+    insert_main_category(session)
+    insert_sub_category(session)
+    insert_categor_product_main_parameters(session)
+    insert_products(session)
+    insert_images_product(session)
+    insert_users(session)
+    insert_feedback(session)
+
+
 if __name__ == '__main__':
-    sys.exit(main(session))
+    sys.exit(main(session_global))

@@ -28,7 +28,9 @@ engine = create_engine(
 logging.debug('Создали engine')
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
-session = Session()
+# Используем не общеупотребимое имя session, что б было меньше соблазна
+# пользоваться глобальной переменной напрямую
+session_global = Session()
 logging.debug('Создали session')
 
 Base = declarative_base()
