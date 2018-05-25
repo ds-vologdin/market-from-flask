@@ -68,6 +68,9 @@ class CategoryProductMainParameters(Base):
         self.name = name
         self.category_product_id = category_product_id
 
+    def __repr__(self):
+        return '<category_product_main_parameters({0})>'.format(self.name)
+
 
 class CategoryProduct(Base):
     __tablename__ = 'category_product'
@@ -109,7 +112,9 @@ class ImagesProduct(Base):
         self.id_product = id_product
         self.file = file
         self.priority = priority
-        pass
+
+    def __repr__(self):
+        return '<images_product({0})>'.format(self.file)
 
 
 class Product(Base):
@@ -122,6 +127,8 @@ class Product(Base):
     rating = Column(Integer)
     # rating - величина рассчётная (считается по feedback раз в день)
     # если имеет значение 0 - значит рейтинга нет
+    # TODO: нужен скрипт который будет расчитывать rating, и запскать его
+    # с помощью cron
     parameters = Column(JSONB)
     # тип parameters (JSONB) - привязывает нас к postgresql
     # пока не понял как обратиться через sqlalchemy к вложенному элементу json
@@ -224,6 +231,9 @@ class Feedback(Base):
         self.user_id = user_id
         self.product_id = product_id
 
+    def __repr__(self):
+        return '<feedback({0} {1})>'.format(self.description, self.rating)
+
 
 class User(Base):
     ''' Класс используется только для связи с Feedback, так что
@@ -240,3 +250,6 @@ class User(Base):
         self.login = login
         self.name = name
         self.city = city
+
+    def __repr__(self):
+        return '<user({0} {1} {2})>'.format(self.login, self.name, self.city)
