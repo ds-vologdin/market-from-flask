@@ -5,6 +5,7 @@ import logging
 
 def convert_str_to_logging_level(level_str=None):
     if not level_str:
+        # Значение по умолчанию
         return logging.WARNING
     if level_str == 'DEBUG':
         return logging.DEBUG
@@ -18,34 +19,42 @@ def convert_str_to_logging_level(level_str=None):
         return logging.CRITICAL
 
 
-def parse_config(file_config='/etc/flask_market.conf'):
-    # Берём данные из конфига (по умлочанию /etc/flask_market.conf)
-    # что бы не коммитить пароли
-    # Пример конфига в flask_market.conf
-    if not os.path.isfile(file_config):
+def parse_config_section_base(config=None):
+    if not config:
+        return None
+    if 'FLASK_DB' not in config:
         return None
 
-    config = configparser.ConfigParser()
-    config.read(file_config)
-
-    databeses = {}
-    if 'FLASK_DB' in config:
-        databeses = {
-            'default': {
-                key.upper(): config['FLASK_DB'][key]
-                for key in config['FLASK_DB']
-            }
-            # Можем тут объявить отдельные БД для TEST и PROD
-            # 'test': {
-            #     key.upper(): config['TEST_DB'][key]
-            #     for key in config['TEST_DB']
-            # }
+    databases = {
+        'default': {
+            key.upper(): config['FLASK_DB'][key]
+            for key in config['FLASK_DB']
         }
+    }
+    # Эта секция приведена для примера, как расширять конфиг
+    # Можно разделить TEST БД от PROD БД
+    # if 'TEST_DB' not in config:
+    #     databases.update({
+    #         'test': {
+    #             key.upper(): config['TEST_DB'][key]
+    #             for key in config['TEST_DB']
+    #         }
+    #     })
+    return databases
 
+
+def parse_config_section_path_images(config=None):
+    if not config:
+        return None
     path_images = 'images_product'  # Значение по-умолчанию
     if 'IMAGE' in config:
         path_images = config['IMAGE'].get('PATCH', path_images)
+    return path_images
 
+
+def parse_config_section_logging(config=None):
+    if not config:
+        return None
     logging_config = {}
     if 'LOGGING' in config:
         logging_config.update({
@@ -58,6 +67,25 @@ def parse_config(file_config='/etc/flask_market.conf'):
         logging_config.update({
             'LEVEL': logging_level,
         })
+    return logging_config
+
+
+def parse_config(file_config='/etc/flask_market.conf'):
+    # Берём данные из конфига (по умлочанию /etc/flask_market.conf)
+    # что бы не коммитить пароли
+    # Пример конфига в flask_market.conf
+    if not os.path.isfile(file_config):
+        return None
+
+    config = configparser.ConfigParser()
+    try:
+        config.read(file_config)
+    except:
+        return None
+
+    databeses = parse_config_section_base(config)
+    path_images = parse_config_section_path_images(config)
+    logging_config = parse_config_section_logging(config)
 
     return {
         'DATABASES': databeses,
@@ -74,7 +102,7 @@ if not config:
     config = parse_config('flask_market.conf')
 
 # Мне показалось, что настроить logging в модуле settings логично
-# Или я не прав?
+# Или я не прав? надо об этом подумать
 logging_config = config.get('LOGGING')
 if logging_config:
     logging.basicConfig(
