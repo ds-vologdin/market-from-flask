@@ -56,16 +56,12 @@ def parse_config_section_logging(config=None):
         return None
     logging_config = {}
     if 'LOGGING' in config:
-        logging_config.update({
-            'FILE': config['LOGGING'].get('FILE'),
-        })
+        logging_config['FILE'] = config['LOGGING'].get('FILE'),
         # Если FILE не задано, то будет None - логи будут писаться в stdout
         logging_level = convert_str_to_logging_level(
             config['LOGGING'].get('LEVEL', logging.DEBUG)
         )
-        logging_config.update({
-            'LEVEL': logging_level,
-        })
+        logging_config['LEVEL'] = logging_level
     return logging_config
 
 
