@@ -20,9 +20,9 @@ def convert_str_to_logging_level(level_str=None):
 
 def parse_config_section_base(config=None):
     if not config:
-        return None
+        return {}
     if 'FLASK_DB' not in config:
-        return None
+        return {}
 
     databases = {
         'default': {
@@ -44,7 +44,7 @@ def parse_config_section_base(config=None):
 
 def parse_config_section_path_images(config=None):
     if not config:
-        return None
+        return {}
     path_images = 'images_product'  # Значение по-умолчанию
     if 'IMAGE' in config:
         path_images = config['IMAGE'].get('PATCH', path_images)
@@ -53,15 +53,16 @@ def parse_config_section_path_images(config=None):
 
 def parse_config_section_logging(config=None):
     if not config:
-        return None
-    logging_config = {}
+        return {}
     if 'LOGGING' not in config:
-        return None
+        return {}
+    logging_config = {
+        'FILE': config['LOGGING'].get('FILE'),
+        'LEVEL': convert_str_to_logging_level(
+            config['LOGGING'].get('LEVEL', logging.DEBUG)
+        )
+    }
     # Если FILE не задано, то будет None - логи будут писаться в stdout
-    logging_config['FILE'] = config['LOGGING'].get('FILE')
-    logging_config['LEVEL'] = convert_str_to_logging_level(
-        config['LOGGING'].get('LEVEL', logging.DEBUG)
-    )
     return logging_config
 
 
@@ -70,13 +71,13 @@ def parse_config(file_config='/etc/flask_market.conf'):
     # что бы не коммитить пароли
     # Пример конфига в flask_market.conf
     if not os.path.isfile(file_config):
-        return None
+        return {}
 
     config = configparser.ConfigParser()
     try:
         config.read(file_config)
     except:
-        return None
+        return {}
 
     databeses = parse_config_section_base(config)
     path_images = parse_config_section_path_images(config)
