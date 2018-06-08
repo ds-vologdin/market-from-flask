@@ -55,13 +55,13 @@ def parse_config_section_logging(config=None):
     if not config:
         return None
     logging_config = {}
-    if 'LOGGING' in config:
-        logging_config['FILE'] = config['LOGGING'].get('FILE')
-        # Если FILE не задано, то будет None - логи будут писаться в stdout
-        logging_level = convert_str_to_logging_level(
-            config['LOGGING'].get('LEVEL', logging.DEBUG)
-        )
-        logging_config['LEVEL'] = logging_level
+    if 'LOGGING' not in config:
+        return None
+    # Если FILE не задано, то будет None - логи будут писаться в stdout
+    logging_config['FILE'] = config['LOGGING'].get('FILE')
+    logging_config['LEVEL'] = convert_str_to_logging_level(
+        config['LOGGING'].get('LEVEL', logging.DEBUG)
+    )
     return logging_config
 
 
