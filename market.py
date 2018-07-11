@@ -68,7 +68,9 @@ def show_category(category_id):
             'rating': product.rating,
             'cost': product.cost,
             'description': product.description,
-            'images': get_images_product(product),
+            'images': product.get_sorted_path_images(
+                config.get('PATH_IMAGES')
+            ),
         })
     return render_template(
         'subcategory_products.html',
@@ -77,27 +79,6 @@ def show_category(category_id):
         category=category,
         main_category=category.main_category_product
     )
-
-
-def get_images_product(product):
-    if not product:
-        None
-
-    images_product = [(image.file, image.priority) for image in product.images]
-    if not images_product:
-        logging.debug('У продукта с id "{}" не найдены изображения'.format(
-            product.id
-        ))
-        return None
-
-    path_images = config.get('PATH_IMAGES')
-    # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
-    # приоритет выше
-    images_product = [
-        '{}/{}'.format(path_images, file)
-        for file, priority in sorted(images_product, key=lambda x: x[1])
-    ]
-    return images_product
 
 
 @app.route('/product/<int:product_id>/')
@@ -113,7 +94,7 @@ def show_product(product_id):
     # TODO: надо подумать, может в шаблон перенести вызов функции?
     main_parameters = product.get_flat_main_parameters()
 
-    images_product = get_images_product(product)
+    images_product = product.get_sorted_path_images(config.get('PATH_IMAGES'))
 
     feedbacks = product.feedbacks
 

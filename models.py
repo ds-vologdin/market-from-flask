@@ -214,6 +214,23 @@ class Product(Base):
         # self.flat_parameters = parameters
         return parameters
 
+    def get_sorted_path_images(self, path_images=''):
+        images_product = [
+            (image.file, image.priority) for image in self.images
+        ]
+        if not images_product:
+            logging.debug('У продукта с id "{}" не найдены изображения'.format(
+                self.id
+            ))
+            return None
+        # Файлы сортируем по приоритету, чем меньше значение приоритета, тем
+        # приоритет выше
+        images_product = [
+            '{}/{}'.format(path_images, file)
+            for file, priority in sorted(images_product, key=lambda x: x[1])
+        ]
+        return images_product
+
 
 class Feedback(Base):
     __tablename__ = 'feedback'
