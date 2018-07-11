@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 from flask import request
 from models import MainCategoryProduct, Product, CategoryProduct
 import logging
@@ -33,12 +33,7 @@ def show_main_category(main_category_id):
         filter(MainCategoryProduct.id == main_category_id).first()
     if not main_category:
         logging.debug('Запрос основной категории по несуществующему id')
-        return render_template(
-            'subcategory.html',
-            categorys=categorys,
-            main_category=None,
-            sub_category=None,
-            )
+        return abort(404)
     return render_template(
         'subcategory.html',
         categorys=categorys,
@@ -54,11 +49,7 @@ def show_category(category_id):
         filter(CategoryProduct.id == category_id).first()
     if not category:
         logging.debug('Запрос категории по несуществующему id')
-        return render_template(
-            'subcategory_products.html',
-            categorys=categorys,
-            products=None,
-            )
+        return abort(404)
     products_info = []
 
     for product in category.products:
@@ -88,9 +79,7 @@ def show_product(product_id):
     product = Product.query.filter(Product.id == product_id).first()
     if not product:
         logging.debug('Запрос продукта по несуществующему id')
-        return render_template(
-            'product.html', categorys=categorys, product=None
-        )
+        return abort(404)
     # TODO: надо подумать, может в шаблон перенести вызов функции?
     main_parameters = product.get_flat_main_parameters()
 
