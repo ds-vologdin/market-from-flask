@@ -6,86 +6,14 @@
     <h2>{{ product.name }} - {{ product.cost }} руб.</h2>
     <p>Рэйтинг пользователей: {{ product.rating }}</p>
     <div class="bd-example bd-example-tabs" role="tabpanel">
-      <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="home" aria-expanded="true">Описание</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="parameter-tab" data-toggle="tab" href="#parameter" role="tab" aria-controls="profile" aria-expanded="false">Характеристики</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="costs-tab" data-toggle="tab" href="#costs" role="tab" aria-controls="profile" aria-expanded="false">Цены</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="profile" aria-expanded="false">Отзывы {{ feedbacks|length }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="profile" aria-expanded="false">Обзоры</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="profile" aria-expanded="false">Обсуждения</a>
-        </li>
-      </ul>
+      {% include '_product_nav_tabs.html' %}
       <div class="tab-content" id="myTabContent">
-        <div role="tabpanel" class="tab-pane fade active show" id="description" aria-labelledby="description-tab" aria-expanded="true">
-          <div class="row">
-            <div class="col-1">
-              {% if images_product %}
-                {% for image_product in images_product %}
-                  <p><img src="{{ url_for('static', filename=image_product) }}" height="100"></p>
-                {% endfor %}
-              {% endif %}
-            </div>
-            <div class="col-2">
-              {% if images_product %}
-                <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
-              {% endif %}
-            </div>
-            <div class="col-9">
-              <h3>Коротко о товаре</h3>
-              <ul>
-                {% for  parameter, value in main_parameters.items() %}
-                  <li>{{ parameter }} - {{ value }}</li>
-                {% endfor %}
-              </ul>
-              <p>{{ product.description }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="parameter" role="tabpanel" aria-labelledby="parameter-tab" aria-expanded="false">
-          <div class="row">
-            <div class="col-2">
-              {% if images_product %}
-                <p><img src="{{ url_for('static', filename=images_product[0]) }}" height="400"></p>
-              {% endif %}
-            </div>
-            <div class="col-10">
-              <h2>Характеристики</h2>
-              {% for category_parameters, parameters in product.sorted_parameters() %}
-                <h3>{{ category_parameters }}</h3>
-                <ul>
-                  {% for parameter, value in parameters[0].items() %}
-                    <li>{{ parameter }} - {{ value }}</li>
-                  {% endfor %}
-                  {% for parameter, value in parameters[1].items() %}
-                    <li>{{ parameter }} - {{ value }}</li>
-                  {% endfor %}
-                </ul>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
+        {% include '_product_tab_content_description.html' %}
+        {% include '_product_tab_content_parameter.html' %}
         <div class="tab-pane fade" id="costs" role="tabpanel" aria-labelledby="costs-tab" aria-expanded="false">
           <p>Costs</p>
         </div>
-        <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab" aria-expanded="false">
-          {% for feedback in feedbacks %}
-            <h3>{{ feedback.user.name }}</h3>
-            <p>Общая оценка: {{ feedback.rating }}</p>
-            <p>{{ feedback.description }}</p>
-            <hr>
-          {% endfor %}
-        </div>
+        {% include '_product_tab_content_feedback.html' %}
         <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="overview-tab" aria-expanded="false">
           <p>overview</p>
         </div>

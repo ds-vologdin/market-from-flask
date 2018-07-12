@@ -1,0 +1,8 @@
+<div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab" aria-expanded="false">
+  {% for feedback in feedbacks %}
+    <h3>{{ feedback.user.name }}</h3>
+    <p>Общая оценка: {{ feedback.rating }}</p>
+    <p>{{ feedback.description }}</p>
+    <hr>
+  {% endfor %}
+</div>
