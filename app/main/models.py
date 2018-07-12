@@ -4,18 +4,18 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 from flask import json
-import logging
 
 from settings import config
+from .logger import logger
 
 
 databases = config.get('DATABASES')
 if not databases:
-    logging.error('В конфиге не описана БД')
+    logger.error('В конфиге не описана БД')
 
 default_db = databases.get('default')
 if not default_db:
-    logging.error('Проблемы с конфигом БД. Надо смотреть settings.py и конфиг')
+    logger.error('Проблемы с конфигом БД. Надо смотреть settings.py и конфиг')
 
 engine = create_engine(
     '{0}://{1}:{2}@{3}:{4}/{5}'.format(
@@ -25,17 +25,17 @@ engine = create_engine(
     json_serializer=json.dumps,
     echo=False,
 )
-logging.debug('Создали engine')
+logger.debug('Создали engine')
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
 # Используем не общеупотребимое имя session, что б было меньше соблазна
 # пользоваться глобальной переменной напрямую
 session_global = Session()
-logging.debug('Создали session')
+logger.debug('Создали session')
 
 Base = declarative_base()
 Base.query = Session.query_property()
-logging.debug('Создали Base')
+logger.debug('Создали Base')
 
 
 class MainCategoryProduct(Base):
@@ -219,7 +219,7 @@ class Product(Base):
             (image.file, image.priority) for image in self.images
         ]
         if not images_product:
-            logging.debug('У продукта с id "{}" не найдены изображения'.format(
+            logger.debug('У продукта с id "{}" не найдены изображения'.format(
                 self.id
             ))
             return None

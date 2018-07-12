@@ -1,5 +1,5 @@
 import sys
-from models import MainCategoryProduct, CategoryProduct, Product, \
+from .models import MainCategoryProduct, CategoryProduct, Product, \
     ImagesProduct, CategoryProductMainParameters, User, Feedback, \
     Base, session_global, engine
 
