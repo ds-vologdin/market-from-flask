@@ -79,12 +79,12 @@ def parse_config(file_config='/etc/flask_market.conf'):
     except:
         return {}
 
-    databeses = parse_config_section_base(config)
+    databases = parse_config_section_base(config)
     path_images = parse_config_section_path_images(config)
     logging_config = parse_config_section_logging(config)
 
     return {
-        'DATABASES': databeses,
+        'DATABASES': databases,
         'PATH_IMAGES': path_images,
         'LOGGING': logging_config,
     }
