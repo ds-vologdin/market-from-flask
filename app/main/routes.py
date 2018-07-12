@@ -1,7 +1,7 @@
 from flask import render_template
 from flask import request
 
-from settings import config
+from app.settings import config
 from .blueprint import blueprint
 from .models import MainCategoryProduct, Product, CategoryProduct
 from .logger import logger
